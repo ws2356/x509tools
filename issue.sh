@@ -3,14 +3,18 @@ set -eu
 
 show_help() {
   printf 'Usage:\n'\
-'  %s --key <keyfile> --ca <cafile>\n'\
-'  --cakey <cakeyfile>\n' "$0"
+'  %s --key <keyfile>\n'\
+'  --ca <cafile>\n'\
+'  --cakey <cakeyfile>\n'\
+'  --out <outfile>\n'\
+  "$0"
   printf 'Tips:\n  Create key first: openssl genrsa -out mycert.key 2048\n'
 }
 
 keyfile=
 cafile=
 cakeyfile=
+outfile=
 while [ "$#" -gt 0 ] ; do
   case "$1" in
     --key)
@@ -23,6 +27,10 @@ while [ "$#" -gt 0 ] ; do
       ;;
     --cakey)
       cakeyfile="$2"
+      shift ; shift
+      ;;
+    --out)
+      outfile="$2"
       shift ; shift
       ;;
     -h|--help)
@@ -100,7 +108,11 @@ extendedKeyUsage     = clientAuth, serverAuth
 EOF
 
 csrfile="${keyfile}.csr"
-crtfile="${keyfile}.crt"
+if [ -z "$outfile" ] ; then
+  crtfile="${keyfile}.crt"
+else
+  crtfile="$outfile"
+fi
 
 if [ -f "$csrfile" ] ; then
   echo "csrfile exist: $csrfile"
