@@ -15,7 +15,7 @@ while [ "$#" -gt 0 ] ; do
       shift ; shift
       ;;
     --out)
-      keyfile="$2"
+      outfile="$2"
       shift ; shift
       ;;
     --days)

@@ -44,6 +44,12 @@ while [ "$#" -gt 0 ] ; do
   esac
 done
 
+if ! [ -f "$keyfile" ] || \
+  ! [ -f "$cafile" ] || \
+  ! [ -f "$cakeyfile" ] ; then
+  show_help
+  exit 1
+fi
 
 country=
 state=
