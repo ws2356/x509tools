@@ -3,7 +3,7 @@ set -eu
 
 show_help() {
   printf 'Usage:\n'\
-'  %s <mkkey|issue|ca|revoke|mkcnf|selfsign|mkp12> -h\n'\
+'  %s <mkkey|issue|csr|ca|revoke|mkcnf|selfsign|mkp12> -h\n'\
   "$0"
 }
 
