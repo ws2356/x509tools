@@ -31,10 +31,15 @@ show_help() {
 
 passargs=()
 cadir=
+opensslbin=
 while [ "$#" -gt 0 ] ; do
   case "$1" in
     --cadir)
       cadir="$2"
+      shift ; shift
+      ;;
+    --openssl)
+      opensslbin="$2"
       shift ; shift
       ;;
     *)
@@ -55,4 +60,5 @@ if ! [ -d "$cadir" ] ; then
 fi
 
 cnf_file="$("${this_dir}/mkcnf.sh" --cadir "$cadir")"
-openssl ca -config "$cnf_file" "${passargs[@]}"
+selected_openssl="${opensslbin:-openssl}"
+"$selected_openssl" ca -config "$cnf_file" "${passargs[@]}"

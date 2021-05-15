@@ -21,8 +21,13 @@ fi
 
 cadb="${cadir}/index.txt"
 cadb_attr="${cadir}/index.txt.attr"
-[ -r "$cadb" ] || touch "$cadb"
-[ -r "$cadb_attr" ] || touch "$cadb_attr"
+test -r "$cadb" || touch "$_"
+test -r "$cadb_attr" || touch "$_"
+
+dirs_to_mk=(certs crl newcerts private)
+for adir in "${dirs_to_mk[@]}" ; do
+  test -d "${cadir}/$adir" || mkdir -p "$_"
+done
 
 cnf_file="$(mktemp)"
 cat > "$cnf_file" << EOF
@@ -49,7 +54,32 @@ private_key     = $cadir/private/cakey.pem# The private key
 default_days	= 365			# how long to certify for
 default_crl_days= 30			# how long before next CRL
 default_md	= default		# use public key default MD
-preserve	= no			# keep passed DN ordering
+preserve	= yes			# keep passed DN ordering
+
+policy		= policy_anything
+
+# For the CA policy
+[ policy_match ]
+countryName		= match
+stateOrProvinceName	= match
+organizationName	= match
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+# For the 'anything' policy
+# At this point in time, you must list all acceptable 'object'
+# types.
+[ policy_anything ]
+countryName		= optional
+stateOrProvinceName	= optional
+localityName		= optional
+organizationName	= optional
+organizationalUnitName	= optional
+commonName		= supplied
+emailAddress		= optional
+
+
 
 EOF
 
